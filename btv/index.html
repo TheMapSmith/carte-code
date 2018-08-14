@@ -113,10 +113,22 @@
 
     function hatch() {
       const hatches = [
-        'diagonalHatchR',
-        'diagonalHatchL',
-        'horiz',
-        'vert'
+        {
+          name:'diagonalHatchR',
+          color: 'cyan'
+        },
+        {
+          name:'diagonalHatchL',
+          color: 'magenta'
+        },
+        {
+          name:'horiz',
+          color:'yellow'
+        },
+        {
+          name:'vert',
+          color:'black'
+        }
       ]
       svg.select('g')
         .selectAll('path')
@@ -124,11 +136,10 @@
           const int = Math.floor(Math.random() * 4);
           const path = d3.select(this);
           path.attr({
-            'fill': `url(#${hatches[int]})`,
+            'fill': `url(#${hatches[int].name})`,
             'opacity': 0.7,
-            'stroke': 'black',
-            'stroke-width': 0.25,
-            'stroke-opacity': 0.25
+            'stroke': hatches[int].color,
+            'stroke-width': 2
           })
         });
     }
@@ -172,7 +183,8 @@
         .append('path')
         .attr({
           d: "M-1,1 l2,-2 M0,10 l10,-10 M9,11 l2,-2",
-          stroke: 'cyan'
+          stroke: 'cyan',
+          'stroke-width': 2
         });
 
       defs.append("pattern")
@@ -185,7 +197,8 @@
         .append('path')
         .attr({
           d: "M1 11l-2-2m11 1L0 0m11 1L9-1",
-          stroke: 'magenta'
+          stroke: 'magenta',
+          'stroke-width': 2
         });
 
       defs.append("pattern")
@@ -198,7 +211,8 @@
         .append('path')
         .attr({
           d: "M0 0h10M0 5h10M0 10h10",
-          stroke: 'yellow'
+          stroke: 'yellow',
+          'stroke-width': 2
         });
 
       defs.append("pattern")
@@ -212,7 +226,8 @@
         .attr({
           d: "M0 10V0M5 10V0M10 10V0",
           stroke: 'black',
-          'stroke-opacity': 0.7
+          'stroke-opacity': 0.7,
+          'stroke-width': 2
         });
     })
   </script>
