@@ -1,0 +1,17 @@
+{
+  "name": "tweaker",
+  "version": "1.0.0",
+  "description": "tweak things",
+  "main": "index.js",
+  "scripts": {
+    "test": "echo \"Error: no test specified\" && exit 1"
+  },
+  "author": "",
+  "license": "ISC",
+  "dependencies": {
+    "svg.js": "^2.6.5"
+  },
+  "devDependencies": {
+    "xo": "^0.22.0"
+  }
+}
