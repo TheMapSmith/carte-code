@@ -1,0 +1,221 @@
+<!DOCTYPE html>
+<html>
+<meta charset="utf-8">
+<style>
+  .background {
+    fill: #fcfcfc;
+    pointer-events: all;
+  }
+</style>
+
+<body>
+  <button type="button" name="button" id="rotate">Rotate</button>
+  <button type="button" name="button" id="color">Color</button>
+  <button type="button" name="button" id="hatch">Hatch</button>
+  <button type="button" name="button" id="scale">Scale</button>
+
+  <svg></svg>
+
+  <script src="d3.v3.min.js"></script>
+  <script src="topojson.v1.min.js"></script>
+  <script>
+    document.getElementById('color').addEventListener("click", function() {
+      color()
+    });
+    document.getElementById('hatch').addEventListener("click", function() {
+      hatch()
+    });
+    document.getElementById('rotate').addEventListener("click", function() {
+      rotate()
+    });
+    document.getElementById('scale').addEventListener("click", function() {
+      scale()
+    });
+
+    var width = 900,
+      height = 900
+
+    var projection = d3.geo.mercator()
+      .scale(3000000)
+      .center([-73.213, 44.482])
+      .translate([width / 2, height / 2]);
+
+    var path = d3.geo.path()
+      .projection(projection);
+
+    // Set svg width & height
+    var svg = d3.select('svg')
+      .attr('width', width)
+      .attr('height', height);
+
+    // Add background
+    svg.append('rect')
+      .attr('class', 'background')
+      .attr('width', width)
+      .attr('height', height)
+
+    var g = svg.append('g');
+
+    var mapLayer = g.append('g')
+      .classed('map-layer', true);
+
+    // Load map data
+    d3.json('btv.geojson', function(error, mapData) {
+      var features = mapData.features;
+
+      // Draw each province as a path
+      mapLayer.selectAll('path')
+        .data(features)
+        .enter().append('path')
+        .attr('d', path)
+        .attr('vector-effect', 'non-scaling-stroke')
+    });
+
+    function rotate() {
+      d3.select('svg')
+        .select('g')
+        .selectAll('path')
+        .each(function(d) {
+          const plusOrMinus = Math.random() < 0.5 ? -1 : 1;
+          const rand = Math.random() * 2 * plusOrMinus;
+          const centerX = Math.random() * width;
+          const centerY = Math.random() * height;
+          const path = d3.select(this);
+          path.attr('transform', () => {
+            return `rotate(${rand} ${centerX} ${centerY})`;
+          });
+        })
+    }
+
+    function color() {
+      const colors = [
+        '#' + parseInt(Math.random() * 0xFFFFFF).toString(16),
+        '#' + parseInt(Math.random() * 0xFFFFFF).toString(16),
+        '#' + parseInt(Math.random() * 0xFFFFFF).toString(16),
+        '#' + parseInt(Math.random() * 0xFFFFFF).toString(16)
+      ];
+
+      d3.select('svg')
+        .select('g')
+        .selectAll('path')
+        .each(function(d) {
+          const path = d3.select(this);
+          path.attr('opacity', '0.7');
+          path.attr('fill', () => {
+            const num = Math.floor(Math.random() * 4);
+            return colors[num];
+            // return `url(#${hatch[num]})`;
+          });
+          path.attr('stroke', 'none');
+        });
+
+    }
+
+    function hatch() {
+      const hatches = [
+        'diagonalHatchR',
+        'diagonalHatchL',
+        'horiz',
+        'vert'
+      ]
+      svg.select('g')
+        .selectAll('path')
+        .each(function(d) {
+          const int = Math.floor(Math.random() * 4);
+          const path = d3.select(this);
+          path.attr({
+            'fill': `url(#${hatches[int]})`,
+            'opacity': 0.7,
+            'stroke': 'black',
+            'stroke-width': 0.25,
+            'stroke-opacity': 0.25
+          })
+        });
+    }
+
+    function scale() {
+      d3.select('svg')
+        .select('g')
+        .selectAll('path')
+        .each(function(d) {
+          const plusOrMinus = Math.random() < 0.5 ? -1 : 1;
+          const rand = (Math.random() + 1) * plusOrMinus;
+          const path = d3.select(this);
+          const x = Math.random() * width;
+          const y = Math.random() * height;
+          k = 1.1;
+          path.attr("transform",
+          "translate(" + width / 2 + "," + height / 2 + ")"
+          + "scale(" + k + ")"
+          + "translate(" + -x + "," + -y + ")")
+          // path.attr('transform', () => {
+          //   return `scale(${rand})`;
+          // });
+        })
+    }
+
+    document.addEventListener("DOMContentLoaded", function() {
+
+      const svg = d3.select('svg')
+
+      svg.append('defs')
+
+      const defs = d3.select('defs')
+
+      defs.append("pattern")
+        .attr({
+          id: 'diagonalHatchR',
+          width: 10,
+          height: 10,
+          patternUnits: 'userSpaceOnUse'
+        })
+        .append('path')
+        .attr({
+          d: "M-1,1 l2,-2 M0,10 l10,-10 M9,11 l2,-2",
+          stroke: 'cyan'
+        });
+
+      defs.append("pattern")
+        .attr({
+          id: 'diagonalHatchL',
+          width: 10,
+          height: 10,
+          patternUnits: 'userSpaceOnUse'
+        })
+        .append('path')
+        .attr({
+          d: "M1 11l-2-2m11 1L0 0m11 1L9-1",
+          stroke: 'magenta'
+        });
+
+      defs.append("pattern")
+        .attr({
+          id: 'horiz',
+          width: 10,
+          height: 10,
+          patternUnits: 'userSpaceOnUse'
+        })
+        .append('path')
+        .attr({
+          d: "M0 0h10M0 5h10M0 10h10",
+          stroke: 'yellow'
+        });
+
+      defs.append("pattern")
+        .attr({
+          id: 'vert',
+          width: 10,
+          height: 10,
+          patternUnits: 'userSpaceOnUse'
+        })
+        .append('path')
+        .attr({
+          d: "M0 10V0M5 10V0M10 10V0",
+          stroke: 'black',
+          'stroke-opacity': 0.7
+        });
+    })
+  </script>
+</body>
+
+</html>
