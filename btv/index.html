@@ -17,23 +17,13 @@
 
   <svg></svg>
 
-  <script src="d3.v3.min.js"></script>
+  <script src="../src/d3.v3.min.js"></script>
   <script>
-    document.getElementById('color').addEventListener("click", function() {
-      color()
-    });
-    document.getElementById('hatch').addEventListener("click", function() {
-      hatch()
-    });
-    document.getElementById('rotate').addEventListener("click", function() {
-      rotate()
-    });
-    document.getElementById('scale').addEventListener("click", function() {
-      scale()
-    });
-    document.getElementById('move').addEventListener("click", function() {
-      move()
-    });
+    document.getElementById('color').addEventListener("click", function() { color() });
+    document.getElementById('hatch').addEventListener("click", function() { hatch() });
+    document.getElementById('rotate').addEventListener("click", function() { rotate() });
+    document.getElementById('scale').addEventListener("click", function() { scale() });
+    document.getElementById('move').addEventListener("click", function() { move() });
 
     var width = 900,
       height = 900
