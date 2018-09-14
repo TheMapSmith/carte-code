@@ -70,9 +70,9 @@
         .selectAll('path')
         .each(function(d) {
           const plusOrMinus = Math.random() < 0.5 ? -1 : 1;
-          const rand = Math.random() * 2 * plusOrMinus;
-          const centerX = Math.random() * width;
-          const centerY = Math.random() * height;
+          const rand = Math.random() * 4 * plusOrMinus;
+          const centerX = Math.random() * width/2;
+          const centerY = Math.random() * height/2;
           const path = d3.select(this);
           path.attr('transform', () => {
             return `rotate(${rand} ${centerX} ${centerY})`;
